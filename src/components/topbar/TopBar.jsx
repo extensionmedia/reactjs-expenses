@@ -1,9 +1,10 @@
 import {React, useState} from 'react';
 import { Menu, Bell, Search } from 'react-feather';
-import SearchBar from './SearchBar'
-
+import SearchBar from './Search/SearchBar'
+import Notifications from './Notifications/Notifications';
 function TopBar() {
   const [showSearch, setShowSearch] = useState(false)
+  
   return (
     <div className='w-full shadow bg-white relative'>
         <div className='container mx-auto flex items-center justify-between bg-white h-12 text-gray-700'>
@@ -20,6 +21,7 @@ function TopBar() {
             <div className="relative">
                 <Bell className="cursor-pointer transition-all p-1 h-8 w-8 hover:bg-green-700 hover:text-white rounded-full" />
                 <div className="px-[4px] ml-4 absolute -top-1  bg-red-500 text-white rounded-full text-xs text-center">1</div>
+                <Notifications />
             </div>
           </div>
         </div> 
