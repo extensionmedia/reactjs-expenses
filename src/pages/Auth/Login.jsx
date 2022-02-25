@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Facebook, AtSign, Eye, EyeOff, Check, AlertTriangle, RotateCw } from 'react-feather';
+import Axios from '../../Api/Axios';
 
 const Login = () => {
 
@@ -25,18 +26,36 @@ const Login = () => {
     const handleSubmit = (e) =>{
         e.preventDefault()
         setIsLoading(!isLoading)
-        setTimeout(() => {
-            setIsLoading(false)
-            setConnected(!connected)
-        }, 4000);
-
+        Axios.get('/csrf-cookie').then(response => {
+            const form = {
+                email : login.email,
+                password : login.password
+            }
+            Axios.post("/user/login", form).then(res => {
+                if(res.data.error){
+                    setError(true)
+                    setConnected(false)
+                }else{
+                    setError(false)
+                    setConnected(true)
+                    localStorage.setItem(login.email+'-token', res.data.token);
+                    localStorage.setItem(login.email+'-user', JSON.stringify(res.data.user));
+                    login.email = ""
+                    login.password = ""
+                    console.log(res.data)
+                }
+                setIsLoading(false)
+            }).catch(function (error) {
+                console.log(error.toJSON());
+              });
+        })
     }
 
   return (
       <div className="w-full h-full pt-12 px-2 bg-gray-100">
         <div className="relative mx-auto w-full md:w-96 rounded-lg bg-white shadow border-3 pt-8 pb-12 px-4">
-            {!error && <div className="bg-opacity-60 flex items-center absolute top-2 left-2 right-2 rounded bg-pink-200 border border-pink-300 text-pink-900 py-2 px-3">
-                <AlertTriangle className='p-1' />Could not identify, try again!
+            {error && <div className="bg-opacity-60 flex items-center absolute top-2 left-2 right-2 rounded bg-pink-200 border border-pink-300 text-pink-900 py-2 px-3">
+                <AlertTriangle className='p-1' />Bad credentials, try again!
             </div>}
 
             <form onSubmit={(handleSubmit)}>
