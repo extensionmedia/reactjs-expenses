@@ -1,8 +1,9 @@
-import Login from "./pages/Auth/Login";
+import Main from "./layouts/Main";
+
 function App() {
   return (
     <div className="bg-gray-50 h-screen w-full">
-      <Login />
+      <Main />
     </div>
 
   );
